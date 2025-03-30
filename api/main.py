@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
-app=FastAPI()
+app = FastAPI()
 
-@app.get("/")
-async def test():
-  return "connected to api"
+@app.post("/")
+async def test_post():
+    return "connecyrdf to api"
