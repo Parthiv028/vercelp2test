@@ -102,32 +102,7 @@ def get_answer(q_number: int, file: UploadFile = None, question: str = None):
                 "url": f"https://httpbin.org/get?email={email.replace('@', '%40')}"
             }
         
-        elif q_number == 3 and file:
-            return run_prettier_on_md(file)
-        elif q_number == 4:
-            return compute_google_sheets_formula(question)
-        elif q_number == 5:
-            return  compute_excel_formula(question)
-
-        elif q_number == 6:
-            return compute_wednesdays_count(question)
-        elif q_number == 7 and file:
-            return  extract_csv_answer(file)
-        elif q_number == 8:
-            return sort_json_objects(question)
-        elif q_number == 9:
-            return compute_json_hash_from_file(file)
-        elif q_number == 10 and file:
-            return process_unicode_data(file)
-        elif q_number == 14 and file:
-            return process_replace_across_files(file)
-        elif q_number == 15 and file:
-            return process_list_files_attributes(file)
-        elif q_number == 16 and file:
-            return process_move_rename_files(file)
-        elif q_number == 17 and file:
-            return process_compare_files(file)
-
+       
     return ANSWERS.get(q_number, "Answer not found")
 
 
