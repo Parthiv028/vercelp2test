@@ -1,12 +1,8 @@
-
-
-from fastapi import FastAPI, Form, UploadFile
+from fastapi import FastAPI, Form
 from difflib import SequenceMatcher
-import re
 
+app = FastAPI()
 
-app=FastAPI()
-nothardcoded = []
 QUESTIONS = {
     1: "Install and run Visual Studio Code. In your Terminal (or Command Prompt), type code -s and press Enter. Copy and paste the entire output below. What is the output of code -s?"
 }
@@ -57,17 +53,8 @@ CPU %   Mem MB     PID  Process
     0        0   18866       /Users/ok/.vscode/extensions/ms-python.python-2024.22.2-darwin-arm64/python-env-tools/bin/pet server
     0       33   18887       electron-nodejs (bundle.js )
     1       49   18545     window
-    0       82   18924     window
-
-Workspace Stats: 
-|  Window (Extension: Cody: AI Coding Assistant with Autocomplete & Chat — Untitled (Workspace))
-|    Folder (TDS): 0 files
-|      File types:
-|      Conf files:
-"""
+    0       82   18924     window"""
 }
-
-
 
 def check_question_similarity(input_question: str):
     best_match = None
@@ -78,24 +65,19 @@ def check_question_similarity(input_question: str):
         if score > highest_score:
             highest_score = score
             best_match = q_number
-    
     return best_match, highest_score
 
 def get_answer(q_number: int, question: str = None):
-        
-       
     return ANSWERS.get(q_number, "Answer not found")
-
 
 @app.post("/")
 async def process_question(question: str = Form(...)):
-    q_number, similarity_score = check_question_similarity(question)
-
-    if similarity_score >= 50.0:
-        answer = get_answer(q_number, question)
-        if not isinstance(answer, str):
-            answer = str(answer)
-        return {"answer": answer, "similarity_score": similarity_score}
-    else:
-        return {"error": "Question not recognized", "similarity_score": similarity_score}
-
+    try:
+        q_number, similarity_score = check_question_similarity(question)
+        if similarity_score >= 50.0:
+            answer = get_answer(q_number, question)
+            return {"answer": answer, "similarity_score": similarity_score}
+        else:
+            return {"error": "Question not recognized", "similarity_score": similarity_score}
+    except Exception as e:
+        return {"error": "An error occurred", "details": str(e)}
