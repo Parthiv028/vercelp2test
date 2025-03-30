@@ -5,7 +5,7 @@ from difflib import SequenceMatcher
 import re
 
 
-app=FastAPI
+app=FastAPI()
 
 QUESTIONS = {
     1: "Install and run Visual Studio Code. In your Terminal (or Command Prompt), type code -s and press Enter. Copy and paste the entire output below. What is the output of code -s?"
