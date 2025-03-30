@@ -1,5 +1,10 @@
+import logging
 from fastapi import FastAPI, Form
 from difflib import SequenceMatcher
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
@@ -59,7 +64,6 @@ CPU %   Mem MB     PID  Process
 def check_question_similarity(input_question: str):
     best_match = None
     highest_score = 0.0
-    
     for q_number, stored_question in QUESTIONS.items():
         score = SequenceMatcher(None, input_question.lower(), stored_question.lower()).ratio() * 100
         if score > highest_score:
@@ -80,4 +84,5 @@ async def process_question(question: str = Form(...)):
         else:
             return {"error": "Question not recognized", "similarity_score": similarity_score}
     except Exception as e:
+        logger.exception("Error processing question")
         return {"error": "An error occurred", "details": str(e)}
