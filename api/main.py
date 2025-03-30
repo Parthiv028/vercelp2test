@@ -2,6 +2,6 @@ from fastapi import FastAPI
 
 app=FastAPI()
 
-@app.post("/")
+@app.get("/")
 async def test():
   return "connected to api"
