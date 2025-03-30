@@ -81,37 +81,18 @@ def check_question_similarity(input_question: str):
     
     return best_match, highest_score
 
-def get_answer(q_number: int, file: UploadFile = None, question: str = None):
-    if q_number in nothardcoded:
-        if q_number == 2:
-            # Extract email dynamically
-            import re
-            match = re.search(r"email\s+set\s+to\s+([\w\.-]+@[\w\.-]+)", question)
-            email = match.group(1) if match else "unknown@example.com"
-            
-            return {
-                "args": {"email": email},
-                "headers": {
-                    "Accept": "*/*",
-                    "Accept-Encoding": "gzip, deflate",
-                    "Host": "httpbin.org",
-                    "User-Agent": "HTTPie/3.2.4",
-                    "X-Amzn-Trace-Id": "Root=1-67966078-0d45c5eb3734c87f4f504f75"
-                },
-                "origin": "106.51.202.98",
-                "url": f"https://httpbin.org/get?email={email.replace('@', '%40')}"
-            }
+def get_answer(q_number: int, question: str = None):
         
        
     return ANSWERS.get(q_number, "Answer not found")
 
 
 @app.post("/")
-async def process_question(question: str = Form(...), file: UploadFile = None):
+async def process_question(question: str = Form(...)):
     q_number, similarity_score = check_question_similarity(question)
 
     if similarity_score >= 50.0:
-        answer = get_answer(q_number, file, question)
+        answer = get_answer(q_number, question)
         if not isinstance(answer, str):
             answer = str(answer)
         return {"answer": answer, "similarity_score": similarity_score}
